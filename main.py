@@ -55,6 +55,15 @@ async def create(user: Users, db:Session = Depends(get_db)):
     db.commit()
     return user
 
+@app.post("/authenticateUser")
+async def create(email:str, password:str, db:Session = Depends(get_db)):
+    user_model = db.query(models.Users).filter(models.Users.email == email).first()
+    if user_model is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if password != user_model.password:
+        raise HTTPException(status_code=401, detail="Incorrect password")
+    return {"message": "Authentication successful", "userId": user_model.id}
+
 # @app.put("/put/{book_id}")
 # async def update(book_id: int, book: Book, db:Session = Depends(get_db)):
 #     book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
