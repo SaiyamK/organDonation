@@ -23,6 +23,20 @@ class Users(BaseModel):
     mobile: str = Field(min_length=1, max_length=100)
     password: str = Field(min_length=1, max_length=100)
     isAdmin: bool = Field(default=False)
+    address: str = Field(min_length=1, max_length=100)
+    bloodGroup: str = Field(min_length=1, max_length=3)
+    organ_id: int = Field()
+    hospital_id: int = Field()
+    isAlive: bool = Field(default=False)
+    isDonor: bool = Field(default=False)
+    isReceipent: bool = Field(default=False)
+
+class Organs(BaseModel):
+    organ_name: str = Field(min_length=1, max_length=100)
+
+class Hospital(BaseModel):
+    hospital_name: str = Field(min_length=1, max_length=100)
+    address: str = Field(min_length=1, max_length=100)
 
 @app.get("/")
 async def root(db:Session = Depends(get_db)):
@@ -36,6 +50,30 @@ async def root(db:Session = Depends(get_db)):
         user_model.password = "root"
         user_model.isAdmin = True
         db.add(user_model)
+        db.commit()
+    organCount = db.query(models.Organs).count()
+    if organCount == 0:
+        organs_data = [
+            "kidney",
+            "liver",
+            "eye"
+        ]
+        for data in organs_data:
+            organ_model = models.Organs()
+            organ_model.organ_name = data
+            db.add(organ_model)
+        db.commit()
+    hospitalCount = db.query(models.Hospital).count()
+    if hospitalCount == 0:
+        hospitals_data = [
+            "Apollo Hospitals",
+            "Medanta",
+            "Fortis"
+        ]
+        for data in hospitals_data:
+            hospital_model = models.Hospital()
+            hospital_model.hospital_name = data
+            db.add(hospital_model)
         db.commit()
     return {"message": "Hello World"}
 
@@ -67,7 +105,7 @@ async def create(email:str, password:str, db:Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     if password != user_model.password:
         raise HTTPException(status_code=401, detail="Incorrect password")
-    return {"message": "Authentication successful", "userId": user_model.id}
+    return {"message": "Authentication successful", "token": user_model.id, "isAdmin": user_model.isAdmin}
 
 @app.put("/forgotPassword")
 async def forgot_password(email: str, db: Session = Depends(get_db)):
