@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 import models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from random import randint
 
 app = FastAPI()
 
@@ -67,6 +68,27 @@ async def create(email:str, password:str, db:Session = Depends(get_db)):
     if password != user_model.password:
         raise HTTPException(status_code=401, detail="Incorrect password")
     return {"message": "Authentication successful", "userId": user_model.id}
+
+@app.put("/forgotPassword")
+async def forgot_password(email: str, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.email == email).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    temporary_password = str(randint(100000, 999999))
+    user.password = temporary_password
+    db.commit()
+    return {"message": "Temporary password sent successfully", "temporaryPassword": temporary_password}
+
+@app.put("/changePassword")
+async def change_password(email: str, old_password:str, new_password:str, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.email == email).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if old_password != user.password:
+        raise HTTPException(status_code=401, detail="Incorrect password")
+    user.password = new_password
+    db.commit()
+    return {"message": "Password Changed successfully"}
 
 # @app.put("/put/{book_id}")
 # async def update(book_id: int, book: Book, db:Session = Depends(get_db)):
