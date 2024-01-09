@@ -44,16 +44,20 @@ async def read(db:Session = Depends(get_db)):
 
 @app.post("/registerUser")
 async def create(user: Users, db:Session = Depends(get_db)):
-    user_model = models.Users()
-    user_model.first_name = user.first_name
-    user_model.last_name = user.last_name
-    user_model.email = user.email
-    user_model.mobile = user.mobile
-    user_model.password = user.password
-    user_model.isAdmin = False
-    db.add(user_model)
-    db.commit()
-    return user
+    user_model = db.query(models.Users).filter(models.Users.email == user.email).first()
+    if user_model is None:
+        user_model = models.Users()
+        user_model.first_name = user.first_name.upper()
+        user_model.last_name = user.last_name.upper()
+        user_model.email = user.email.lower()
+        user_model.mobile = user.mobile
+        user_model.password = user.password
+        user_model.isAdmin = False
+        db.add(user_model)
+        db.commit()
+        return user
+    else:
+        raise HTTPException(status_code=404, detail="User already found")
 
 @app.post("/authenticateUser")
 async def create(email:str, password:str, db:Session = Depends(get_db)):
