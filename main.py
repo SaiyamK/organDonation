@@ -103,6 +103,14 @@ async def root(db:Session = Depends(get_db)):
 async def read(db:Session = Depends(get_db)):
     return db.query(models.Users).all()
 
+@app.get("/getUsersByTokenId")
+async def read(user_id:int, db:Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    else:
+        return user
+        
 @app.post("/registerUser")
 async def create(user: Users, db:Session = Depends(get_db)):
     user_model = db.query(models.Users).filter(models.Users.email == user.email).first()
