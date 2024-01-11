@@ -266,7 +266,7 @@ async def read(user_id: int, organ_id: int, reason: str, db: Session = Depends(g
     return {"message": "Request Placed successfully"}
 
 @app.get("/getAvailableOrgansForDonation")
-async def read(db:Session = Depends(get_db)):
+async def read(db: Session = Depends(get_db)):
     query = (
     db.query(models.Users, models.Donations, models.Organs)
     .join(models.Donations, models.Donations.donor_id == models.Users.id, isouter=False)
@@ -299,7 +299,7 @@ async def delete(donation_id: int, db:Session = Depends(get_db)):
     return {"message": "Deleted"}
 
 @app.get("/getRequests")
-async def read(db:Session = Depends(get_db)):
+async def read(db: Session = Depends(get_db)):
     userR = aliased(models.Users)
     donationR = aliased(models.Donations)
     userD = aliased(models.Users)
@@ -321,13 +321,34 @@ async def read(db:Session = Depends(get_db)):
         donor_name = userD.first_name + " " + userD.last_name
         recipient_name = userR.first_name + " " + userR.last_name
         organ_name = organ.organ_name
+        donation_recipient_table_id = donationR.id
+        donation_donor_table_id = donationD.id
+        organ_id = organ.id
         data.append({
+            "donation_recipient_table_id": donation_recipient_table_id,
+            "donation_donor_table_id": donation_donor_table_id,
             "donor_name": donor_name,
             "recipient_name": recipient_name,
-            "organ_name": organ_name
+            "organ_name": organ_name,
+            "organ_id": organ_id
         })
     return data
 
+@app.put("/approveRequest/{donation_recipient_table_id}/{donation_donor_table_id}/{organ_id}")
+async def read(donation_recipient_table_id: int, donation_donor_table_id: int, organ_id: int, db: Session = Depends(get_db)):
+    donationR = db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).first()
+    donationD = db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).first()
+    donation_model = models.Donations()
+    donation_model.donor_id = donationD.donor_id
+    donation_model.recipient_id = donationR.recipient_id
+    donation_model.organ_id = organ_id
+    donation_model.status = 'approved'
+    db.add(donation_model)
+    db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).delete()
+    db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).delete()
+    db.commit()
+    return {"message": "Approved"}
+    
 # @app.post("/donateOrgan")
 # async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
 #     user = db.query(models.Users).filter(models.Users.id == user_id).first()
