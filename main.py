@@ -43,8 +43,6 @@ class Users(BaseModel):
     bloodGroup: str = Field(min_length=1, max_length=3)
     hospital_id: int = Field()
     isAlive: bool = Field(default=False)
-    isDonor: bool = Field(default=False)
-    isRecipient: bool = Field(default=False)
 
 class Organs(BaseModel):
     organ_name: str = Field(min_length=1, max_length=100)
@@ -238,7 +236,7 @@ async def read(user_id: int, db: Session = Depends(get_db)):
         donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
         donor_data.append({
             "organ_name": organ_name,
-            "recipient_name": donor_name,
+            "donor_name": donor_name,
             "donation_status": donation_status
         })
     return donor_data
@@ -348,6 +346,19 @@ async def read(donation_recipient_table_id: int, donation_donor_table_id: int, o
     db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).delete()
     db.commit()
     return {"message": "Approved"}
+
+@app.put("/rejectRequest/{donation_recipient_table_id}")
+async def read(donation_recipient_table_id: int, db: Session = Depends(get_db)):
+    donationR = db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).first()
+    if donationR is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Donation ID {donation_recipient_table_id} : Does Not Exists"
+        )
+    donationR.status = 'rejected'
+    db.add(donationR)
+    db.commit()
+    return {"message": "Request Rejected"}
     
 # @app.post("/donateOrgan")
 # async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
