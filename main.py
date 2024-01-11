@@ -5,6 +5,9 @@ from database import engine, SessionLocal
 from sqlalchemy.orm import Session, aliased
 from random import randint
 from fastapi.middleware.cors import CORSMiddleware
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = FastAPI()
 
@@ -153,7 +156,22 @@ async def forgot_password(email: str, db: Session = Depends(get_db)):
     temporary_password = str(randint(100000, 999999))
     user.password = temporary_password
     db.commit()
-    return {"message": "Temporary password sent successfully", "temporaryPassword": temporary_password}
+    sender_email = 'saiyamkalra@gmail.com'
+    recipient_email = user.email
+    password = 'rlij yqlg yrio SECRET'
+    subject = 'OTP For Password Reset - Organ Donation'
+    body = f'Your OTP is {temporary_password}'
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'plain'))
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, password)
+    server.sendmail(sender_email, recipient_email, message.as_string())
+    server.quit()
+    return {"message": "Temporary password sent successfully"}
 
 @app.put("/changePassword")
 async def change_password(email: str, old_password:str, new_password:str, db: Session = Depends(get_db)):
