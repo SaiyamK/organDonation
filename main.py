@@ -265,6 +265,40 @@ async def read(user_id: int, organ_id: int, reason: str, db: Session = Depends(g
     db.commit()
     return {"message": "Request Placed successfully"}
 
+@app.get("/getAvailableOrgansForDonation")
+async def read(db:Session = Depends(get_db)):
+    query = (
+    db.query(models.Users, models.Donations, models.Organs)
+    .join(models.Donations, models.Donations.donor_id == models.Users.id, isouter=False)
+    .join(models.Organs, models.Donations.organ_id == models.Organs.id, isouter=False)
+    .filter(models.Donations.recipient_id.is_(None))
+    .all()
+    )
+    donor_data = []
+    for donor, donations, organ in query:
+        donation_id = donations.id
+        organ_name = organ.organ_name
+        #donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
+        donor_name = donor.first_name +" " + donor.last_name
+        donor_data.append({
+            "donation_id": donation_id,
+            "organ_name": organ_name,
+            "donor_name": donor_name
+        })
+    return donor_data
+
+@app.delete("/delete/{donation_id}")
+async def delete(donation_id: int, db:Session = Depends(get_db)):
+    donation_model = db.query(models.Donations).filter(models.Donations.id == donation_id).first()
+    if donation_model is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Donation ID {donation_id} : Does Not Exists"
+        )
+    db.query(models.Donations).filter(models.Donations.id == donation_id).delete()
+    db.commit()
+    return {"message": "Deleted"}
+
 # @app.post("/donateOrgan")
 # async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
 #     user = db.query(models.Users).filter(models.Users.id == user_id).first()
