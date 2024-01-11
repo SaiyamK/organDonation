@@ -38,6 +38,12 @@ class Hospital(BaseModel):
     hospital_name: str = Field(min_length=1, max_length=100)
     address: str = Field(min_length=1, max_length=100)
 
+class Donations(BaseModel):
+    doner_id: int = Field()
+    recipient_id: int = Field()
+    organ_id: int = Field()
+    status: str = Field(min_length=1, max_length=100)
+
 @app.get("/")
 async def root(db:Session = Depends(get_db)):
     user_model = db.query(models.Users).filter(models.Users.isAdmin == True).first()
@@ -127,6 +133,40 @@ async def change_password(email: str, old_password:str, new_password:str, db: Se
     user.password = new_password
     db.commit()
     return {"message": "Password Changed successfully"}
+
+@app.post("/donateOrgan")
+async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    if user.isDonor:
+        doner_model = models.Donations()
+        doner_model.doner_id = donation.doner_id
+        doner_model.recipient_id = donation.recipient_id
+        doner_model.organ_id = donation.organ_id
+        doner_model.status = donation.status
+        db.add(doner_model)
+        db.commit()
+        return donation
+    
+@app.post("/receiveOrgan")
+async def create(receive: Donations,user_id: int,db:Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    if user.isReceipent:
+        receipent_model = models.Donations()
+        receipent_model.doner_id = receive.doner_id
+        receipent_model.recipient_id = receive.recipient_id
+        receipent_model.organ_id = receive.organ_id
+        receipent_model.status = receive.status
+        db.add(receipent_model)
+        db.commit()
+        return receive
+
+@app.get("/getOrgans")
+async def read(db:Session = Depends(get_db)):
+    return db.query(models.Organs).all()
+
+@app.get("/getHospital")
+async def read(db:Session = Depends(get_db)):
+    return db.query(models.Hospital).all()
 
 # @app.put("/put/{book_id}")
 # async def update(book_id: int, book: Book, db:Session = Depends(get_db)):

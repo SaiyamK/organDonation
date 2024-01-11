@@ -29,5 +29,13 @@ class Hospital(Base):
     id = Column(Integer, primary_key=True, index=True)
     hospital_name = Column(String)
 
+class Donations(Base):
+    __tablename__ = 'donations'
+    id = Column(Integer, primary_key=True, index=True)
+    doner_id= Column(Integer, ForeignKey('users.id'), nullable=True)
+    recipient_id = Column(Integer, ForeignKey('users.id'),nullable=True)
+    organ_id = Column(Integer,ForeignKey('organs.id'))
+    status = Column(String, default="pending")
+
 organ = relationship("Organs", back_populates="users")
 hospital = relationship("Hospital", back_populates="users")
