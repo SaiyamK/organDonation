@@ -17,12 +17,15 @@ document.getElementById('btn-login').addEventListener("click", async (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value.trim().replaceAll(' ', '');
     const password = document.getElementById("password").value;
-    console.log(username, password);
+    const spinner = document.getElementById("spinner");
+    spinner.classList.toggle("d-none");
     try {
         const res = await validateEntries(username, password);
         window.alert(res.message);
         window.location = res.next;
     } catch (err) {
         console.log(err.message);
+    } finally {
+        spinner.classList.toggle("d-none");
     }
 });

@@ -278,6 +278,7 @@ async def read(db:Session = Depends(get_db)):
     for donor, donations, organ in query:
         donation_id = donations.id
         organ_name = organ.organ_name
+        #donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
         donor_name = donor.first_name +" " + donor.last_name
         donor_data.append({
             "donation_id": donation_id,
@@ -297,36 +298,6 @@ async def delete(donation_id: int, db:Session = Depends(get_db)):
     db.query(models.Donations).filter(models.Donations.id == donation_id).delete()
     db.commit()
     return {"message": "Deleted"}
-
-@app.get("/getRequests")
-async def read(db:Session = Depends(get_db)):
-    userR = aliased(models.Users)
-    donationR = aliased(models.Donations)
-    userD = aliased(models.Users)
-    donationD = aliased(models.Donations)
-    query = (
-    db.query(userR, userD, donationR, donationD, models.Organs)
-    .join(userR, userR.id == donationR.recipient_id, isouter=False)
-    .join(userD, userD.id == donationD.donor_id, isouter=False)
-    .join(donationD, donationR.organ_id == donationD.organ_id, isouter=False)
-    .join(models.Organs, donationR.organ_id == models.Organs.id, isouter=False)
-    .filter(donationD.recipient_id.is_(None))
-    .filter(donationR.donor_id.is_(None))
-    .filter(donationR.status == 'pending')
-    .filter(donationD.status == 'pending')
-    .all()
-    )
-    data = []
-    for userR, userD, donationR, donationD, organ in query:
-        donor_name = userD.first_name + " " + userD.last_name
-        recipient_name = userR.first_name + " " + userR.last_name
-        organ_name = organ.organ_name
-        data.append({
-            "donor_name": donor_name,
-            "recipient_name": recipient_name,
-            "organ_name": organ_name
-        })
-    return data
 
 # @app.post("/donateOrgan")
 # async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
