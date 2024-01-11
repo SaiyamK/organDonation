@@ -184,6 +184,16 @@ async def read(db:Session = Depends(get_db)):
 async def read(db:Session = Depends(get_db)):
     return db.query(models.Hospital).all()
 
+@app.get("/getDoner")
+async def read(db:Session = Depends(get_db)):
+    doner = db.query(models.Users).filter(models.Users.isDonor == True).all()
+    return doner
+
+@app.get("/getRecepient")
+async def read(db:Session = Depends(get_db)):
+    recepient = db.query(models.Users).filter(models.Users.isReceipent == True).all()
+    return recepient
+
 # @app.put("/put/{book_id}")
 # async def update(book_id: int, book: Book, db:Session = Depends(get_db)):
 #     book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
