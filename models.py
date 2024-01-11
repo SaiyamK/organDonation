@@ -13,11 +13,8 @@ class Users(Base):
     isAdmin = Column(Boolean)
     address = Column(String)
     bloodGroup = Column(String)
-    organ_id = Column(Integer, ForeignKey("organs.id"), nullable=True)
     hospital_id = Column(Integer, ForeignKey('hospitals.id'), nullable=True)
     isAlive = Column(Boolean)
-    isDonor = Column(Boolean)
-    isReceipent = Column(Boolean)
 
 class Organs(Base):
     __tablename__ = "organs"
@@ -32,10 +29,11 @@ class Hospital(Base):
 class Donations(Base):
     __tablename__ = 'donations'
     id = Column(Integer, primary_key=True, index=True)
-    doner_id= Column(Integer, ForeignKey('users.id'), nullable=True)
-    recipient_id = Column(Integer, ForeignKey('users.id'),nullable=True)
+    donor_id= Column(Integer, ForeignKey('users.id'), nullable=True)
+    recipient_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     organ_id = Column(Integer,ForeignKey('organs.id'))
     status = Column(String, default="pending")
+    reason = Column(String, nullable=True)
 
 organ = relationship("Organs", back_populates="users")
 hospital = relationship("Hospital", back_populates="users")

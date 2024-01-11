@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel, Field
 import models
 from database import engine, SessionLocal
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from random import randint
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -41,11 +41,10 @@ class Users(BaseModel):
     isAdmin: bool = Field(default=False)
     address: str = Field(min_length=1, max_length=100)
     bloodGroup: str = Field(min_length=1, max_length=3)
-    organ_id: int = Field()
     hospital_id: int = Field()
     isAlive: bool = Field(default=False)
     isDonor: bool = Field(default=False)
-    isReceipent: bool = Field(default=False)
+    isRecipient: bool = Field(default=False)
 
 class Organs(BaseModel):
     organ_name: str = Field(min_length=1, max_length=100)
@@ -55,7 +54,7 @@ class Hospital(BaseModel):
     address: str = Field(min_length=1, max_length=100)
 
 class Donations(BaseModel):
-    doner_id: int = Field()
+    donor_id: int = Field()
     recipient_id: int = Field()
     organ_id: int = Field()
     status: str = Field(min_length=1, max_length=100)
@@ -76,9 +75,13 @@ async def root(db:Session = Depends(get_db)):
     organCount = db.query(models.Organs).count()
     if organCount == 0:
         organs_data = [
-            "kidney",
-            "liver",
-            "eye"
+            "Kidney",
+            "Liver",
+            "Eye",
+            "Heart",
+            "Lungs",
+            "Pancreas",
+            "Intestines"
         ]
         for data in organs_data:
             organ_model = models.Organs()
@@ -88,9 +91,12 @@ async def root(db:Session = Depends(get_db)):
     hospitalCount = db.query(models.Hospital).count()
     if hospitalCount == 0:
         hospitals_data = [
-            "Apollo Hospitals",
+            "Apollo Hospital",
             "Medanta",
-            "Fortis"
+            "Fortis Hospital",
+            "BLK Hospital",
+            "AIIMS",
+            "Max Super Speciality Hospital"
         ]
         for data in hospitals_data:
             hospital_model = models.Hospital()
@@ -122,6 +128,10 @@ async def create(user: Users, db:Session = Depends(get_db)):
         user_model.mobile = user.mobile
         user_model.password = user.password
         user_model.isAdmin = False
+        user_model.address = user.address
+        user_model.bloodGroup = user.bloodGroup
+        user_model.hospital_id = user.hospital_id
+        user_model.isAlive = user.isAlive
         db.add(user_model)
         db.commit()
         return user
@@ -158,32 +168,6 @@ async def change_password(email: str, old_password:str, new_password:str, db: Se
     db.commit()
     return {"message": "Password Changed successfully"}
 
-@app.post("/donateOrgan")
-async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
-    user = db.query(models.Users).filter(models.Users.id == user_id).first()
-    if user.isDonor:
-        doner_model = models.Donations()
-        doner_model.doner_id = donation.doner_id
-        doner_model.recipient_id = donation.recipient_id
-        doner_model.organ_id = donation.organ_id
-        doner_model.status = donation.status
-        db.add(doner_model)
-        db.commit()
-        return donation
-    
-@app.post("/receiveOrgan")
-async def create(receive: Donations,user_id: int,db:Session = Depends(get_db)):
-    user = db.query(models.Users).filter(models.Users.id == user_id).first()
-    if user.isReceipent:
-        receipent_model = models.Donations()
-        receipent_model.doner_id = receive.doner_id
-        receipent_model.recipient_id = receive.recipient_id
-        receipent_model.organ_id = receive.organ_id
-        receipent_model.status = receive.status
-        db.add(receipent_model)
-        db.commit()
-        return receive
-
 @app.get("/getOrgans")
 async def read(db:Session = Depends(get_db)):
     return db.query(models.Organs).all()
@@ -192,31 +176,171 @@ async def read(db:Session = Depends(get_db)):
 async def read(db:Session = Depends(get_db)):
     return db.query(models.Hospital).all()
 
-@app.get("/getDoner")
-async def read(db:Session = Depends(get_db)):
-    doner = db.query(models.Users).filter(models.Users.isDonor == True).all()
-    return doner
+@app.get("/previousContributions/{user_id}")
+async def read(user_id: int, db: Session = Depends(get_db)):
+    userR = aliased(models.Users)
+    query = (
+    db.query(models.Users, models.Donations, models.Organs, userR)
+    .join(models.Donations, models.Donations.donor_id == models.Users.id, isouter=False)
+    .join(models.Organs, models.Donations.organ_id == models.Organs.id, isouter=False)
+    .join(userR, models.Donations.recipient_id == userR.id, isouter=True)
+    .filter(models.Users.id == user_id)
+    .all()
+    )
+    donor_data = []
+    for donor, donations, organ, recipient in query:
+        donation_status = donations.status
+        organ_name = organ.organ_name
+        recipient_name = f"{recipient.first_name} {recipient.last_name}" if recipient else None
+        donor_data.append({
+            "organ_name": organ_name,
+            "recipient_name": recipient_name,
+            "donation_status": donation_status
+        })
+    return donor_data
 
-@app.get("/getRecepient")
-async def read(db:Session = Depends(get_db)):
-    recepient = db.query(models.Users).filter(models.Users.isReceipent == True).all()
-    return recepient
+@app.put("/contribute/{user_id}/{organ_id}")
+async def read(user_id: int, organ_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    organ = db.query(models.Organs).filter(models.Organs.id == organ_id).first()
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"User ID {user_id} : Does Not Exists"
+        )
+    if organ is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Organ ID {organ_id} : Does Not Exists"
+        )
+    donation_model = models.Donations()
+    donation_model.donor_id = user_id
+    donation_model.organ_id = organ_id
+    db.add(donation_model)
+    db.commit()
+    return {"message": "Contribution Placed successfully"}
 
-# @app.put("/put/{book_id}")
-# async def update(book_id: int, book: Book, db:Session = Depends(get_db)):
-#     book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
-#     if book_model is None:
+@app.get("/previousRequests/{user_id}")
+async def read(user_id: int, db: Session = Depends(get_db)):
+    userR = aliased(models.Users)
+    query = (
+    db.query(models.Users, models.Donations, models.Organs, userR)
+    .join(models.Donations, models.Donations.recipient_id == models.Users.id, isouter=False)
+    .join(models.Organs, models.Donations.organ_id == models.Organs.id, isouter=False)
+    .join(userR, models.Donations.donor_id == userR.id, isouter=True)
+    .filter(models.Users.id == user_id)
+    .all()
+    )
+    donor_data = []
+    for recipient, donations, organ, donor in query:
+        donation_status = donations.status
+        organ_name = organ.organ_name
+        donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
+        donor_data.append({
+            "organ_name": organ_name,
+            "recipient_name": donor_name,
+            "donation_status": donation_status
+        })
+    return donor_data
+
+@app.put("/request/{user_id}/{organ_id}")
+async def read(user_id: int, organ_id: int, reason: str, db: Session = Depends(get_db)):
+    user = db.query(models.Users).filter(models.Users.id == user_id).first()
+    organ = db.query(models.Organs).filter(models.Organs.id == organ_id).first()
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"User ID {user_id} : Does Not Exists"
+        )
+    if organ is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Organ ID {organ_id} : Does Not Exists"
+        )
+    donation_model = models.Donations()
+    donation_model.recipient_id = user_id
+    donation_model.organ_id = organ_id
+    donation_model.reason = reason
+    db.add(donation_model)
+    db.commit()
+    return {"message": "Request Placed successfully"}
+
+# @app.post("/donateOrgan")
+# async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
+#     user = db.query(models.Users).filter(models.Users.id == user_id).first()
+#     if user.isDonor:
+#         donor_model = models.Donations()
+#         donor_model.donor_id = donation.donor_id
+#         donor_model.recipient_id = donation.recipient_id
+#         donor_model.organ_id = donation.organ_id
+#         donor_model.status = donation.status
+#         db.add(donor_model)
+#         db.commit()
+#         return donation
+    
+# @app.post("/receiveOrgan")
+# async def create(receive: Donations,user_id: int,db:Session = Depends(get_db)):
+#     user = db.query(models.Users).filter(models.Users.id == user_id).first()
+#     if user.isRecipient:
+#         receipent_model = models.Donations()
+#         receipent_model.donor_id = receive.donor_id
+#         receipent_model.recipient_id = receive.recipient_id
+#         receipent_model.organ_id = receive.organ_id
+#         receipent_model.status = receive.status
+#         db.add(receipent_model)
+#         db.commit()
+#         return receive
+
+# @app.get("/getDonor")
+# async def read(db:Session = Depends(get_db)):
+#     query = (
+#         db.query(models.Users, models.Organs, models.Hospitals)
+#         .join(models.Organs, models.Users.organ_id == models.Organs.id, isouter=True)
+#         .join(models.Hospitals, models.Users.hospital_id == models.Hospitals.id, isouter=True)
+#         .filter(models.Users.isDonor == True)
+#         .all()
+#     )
+#     donor_data = []
+#     for user, organ, hospital in query:
+#         donor_data.append({
+#             "user_id": user.id,
+#             "first_name": user.first_name,
+#             "last_name": user.last_name,
+#             "email": user.email,
+#             "mobile": user.mobile,
+#             "address": user.address,
+#             "bloodGroup": user.bloodGroup,
+#             "organ_name": organ.organ_name if organ else None,
+#             "hospital_name": hospital.hospital_name if hospital else None,
+#             "isAlive": user.isAlive,
+#             "isDonor": user.isDonor,
+#             "isRecipient": user.isRecipient,
+#         })
+#     return donor_data
+
+# @app.get("/getRecipient")
+# async def read(db:Session = Depends(get_db)):
+#     recepient = db.query(models.Users).filter(models.Users.isRecipient == True).all()
+#     return recepient
+
+# @app.put("/registerDR/{user_id}")
+# async def create(user_id:int, user: Users, db:Session = Depends(get_db)):
+#     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
+#     if user_model is None:
 #         raise HTTPException(
 #             status_code=404,
-#             detail=f"ID {book_id} : Does Not Exists"
+#             detail=f"ID {user_id} : Does Not Exists"
 #         )
-#     book_model.title = book.title
-#     book_model.author = book.author
-#     book_model.description = book.description
-#     book_model.rating = book.rating
-#     db.add(book_model)
+#     user_model.address = user.address
+#     user_model.bloodGroup = user.bloodGroup
+#     user_model.organ_id = user.organ_id
+#     user_model.hospital_id = user.hospital_id
+#     user_model.isAlive = user.isAlive
+#     user_model.isDonor = user.isDonor
+#     user_model.isRecipient = user.isRecipient
+#     db.add(user_model)
 #     db.commit()
-#     return book
+#     return user
 
 # @app.put("/delete/{book_id}")
 # async def delete(book_id: int, db:Session = Depends(get_db)):
