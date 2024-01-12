@@ -1,7 +1,7 @@
 var details_Hospital;
 
 async function showHospitals() {
-    const response = await axios.get("http://127.0.0.1:8000/getHospital");
+    const response = await axios.get("http://localhost:8000/getHospital");
     details_Hospital = response.data;
     const dropdown = document.getElementById('apiData');
     dropdown.innerHTML = '';
@@ -16,7 +16,7 @@ async function showHospitals() {
     });
 
 }
-(async () => await showHospitals())();
+showHospitals();
 async function validateDate() {
     var fname = document.getElementById('FirstName').value;
     var lname = document.getElementById('LastName').value;
@@ -36,6 +36,7 @@ async function validateDate() {
         document.getElementById('errorMessage').innerText = '*Invalid email format';
     }
     else {
+
         try {
             const statusAlive = aliveStatus === "Alive";
             const spinner = document.getElementById("spinner");
@@ -53,7 +54,9 @@ async function validateDate() {
             }
             const response = await axios.post("http://127.0.0.1:8000/registerUser", dataToSent)
             const data = response.data;
-            // alert("User is registered");
+            await swal("User Registered!", "You may now login!", "success", {
+                button: "OK",
+            });
             window.location.href = "login.html";
 
         } catch (err) {

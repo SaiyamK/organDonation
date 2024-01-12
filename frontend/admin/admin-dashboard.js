@@ -16,17 +16,25 @@ const organsTable = document.getElementById("organs-table");
 const approveDonation = async (donorId, recipientId, organId, i) => {
     try {
         const res = await axios.put(`http://localhost:8000/approveRequest/${recipientId}/${donorId}/${organId}`);
-        window.alert(res.data.message);
+        // window.alert(res.data.message);
+        // const res = await axios.get("http://localhost:8000/getAllUsers");
+        await swal("", "Request Approved", "success", {
+            button: "OK",
+        });
         requestsTable.children[i].remove();
     } catch (err) {
-        window.alert("Something went wrong");
+
         console.log(err);
+        window.alert("Something went wrong");
     }
 }
 const rejectDonation = async (donation_donor_table_id, i) => {
     try {
         const res = await axios.put(`http://localhost:8000/rejectRequest/${donation_donor_table_id}`);
-        window.alert(res.data.message);
+        await swal("", "Request rejected", "success", {
+            button: "OK",
+        });
+
         requestsTable.children[i].remove();
     } catch (err) {
         window.alert("Something went wrong");
@@ -37,7 +45,9 @@ const rejectDonation = async (donation_donor_table_id, i) => {
 const deleteDonation = async (donation_id, i) => {
     try {
         const res = await axios.delete(`http://localhost:8000/delete/${donation_id}`);
-        window.alert(res.data.message);
+        await swal("", "Donation rejected", "success", {
+            button: "OK",
+        });
         organsTable.children[i].remove();
     } catch (err) {
         window.alert("Something went wrong");
@@ -52,9 +62,9 @@ const fetchPendingRequests = async () => {
             requestsTable.innerHTML += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${req.donor_name} - ${req.donation_donor_table_id}</td>
+                <td>${req.donor_name}</td>
                 <td>${req.organ_name}</td>
-                <td>${req.recipient_name} - ${req.donation_recipient_table_id}</td>
+                <td>${req.recipient_name}</td>
                 <td>
                     <button class="btn btn-success" onclick="approveDonation(${req.donation_donor_table_id}, ${req.donation_recipient_table_id}, ${req.organ_id}, ${i})">Approve</button>
                     <button class="btn btn-danger" onclick="rejectDonation(${req.donation_donor_table_id}, ${i})">Reject</button>
@@ -75,7 +85,7 @@ const fetchAvailableOrgans = async () => {
             <tr>
                 <td>${i + 1}</td>
                 <td>${req.organ_name}</td>
-                <td>${req.donor_name} - ${req.donor_id}</td>
+                <td>${req.donor_name}</td>
                 <td>
                     <button class="btn btn-danger" onclick="deleteDonation(${req.donation_id}, ${i})">Decline</button>
                 </td>

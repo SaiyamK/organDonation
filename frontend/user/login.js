@@ -13,7 +13,9 @@ async function validatePassword() {
       console.log('Response from server:', response.data);
       const token = response.data.token;
       sessionStorage.setItem('authToken', token);
-      alert("Logged in!");
+      await swal("Logged in!", "You may now view the dashboard!", "success", {
+        button: "OK",
+      });
       window.location.href = 'user-dashboard.html';
     } catch (err) {
       console.error('Error:', err);

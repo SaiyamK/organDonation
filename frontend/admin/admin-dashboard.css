@@ -52,6 +52,8 @@ body {
     text-align: center;
 }
 
+
+/* 
 footer {
     background-color: #f8f9fa;
     padding: 10px 0;
@@ -60,7 +62,7 @@ footer {
     bottom: 0;
     width: 100%;
     color: #6c757d;
-}
+} */
 
 @keyframes bg {
     0% {

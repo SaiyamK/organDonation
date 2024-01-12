@@ -106,7 +106,7 @@ const fetchPrevContributions = async () => {
             contribTable.innerHTML += `
                 <tr>
                     <td>${contrib.organ_name}</td>
-                    <td>${contrib.recipient_name}</td>
+                    <td>${contrib.recipient_name !== null ? contrib.recipient_name : 'Awaiting recipient'}</td>
                     <td>${contrib.donation_status}</td>
                 </tr>
             `;
@@ -127,7 +127,11 @@ const makeDonation = async (e) => {
         if (!consent) window.alert("Please provide your consent by checking the box.");
         else {
             const res = await axios.put(`http://localhost:8000/contribute/${authToken}/${organId}`);
-            window.alert(res.data.message);
+            // window.alert(res.data.message);
+            await swal("", "Thanks for your contribution", "success", {
+                button: "OK",
+            });
+            window.location.reload();
         }
     } catch (err) {
         window.alert("Something went wrong!");
@@ -147,7 +151,7 @@ const getPrevRequests = async () => {
             tbReq.innerHTML += `
                 <tr>
                     <td>${contrib.organ_name}</td>
-                    <td>${contrib.donor_name}</td>
+                    <td>${contrib.donor_name !== null ? contrib.donor_name : 'Awaiting donor'}</td>
                     <td>${contrib.donation_status}</td>
                 </tr>
             `;
@@ -169,7 +173,10 @@ document.getElementById("btn-req").addEventListener("click", async (e) => {
         if (!reason) window.alert("Please provide a reason for your request.");
         else {
             const res = await axios.put(`http://localhost:8000/request/${authToken}/${organId}?reason=${reason}`);
-            window.alert(res.data.message);
+            // window.alert(res.data.message);
+            await swal("", "Request registered", "success", {
+                button: "OK",
+            });
             location.reload();
         }
     } catch (err) {

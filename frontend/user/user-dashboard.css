@@ -5,6 +5,7 @@ body {
     background: linear-gradient(to right, #86cbb4, #98c9d8, #c3e8ff);
     background-size: 400%;
     animation: bg 5s linear infinite alternate;
+    height: 100%;
 }
 
 /* Navbar styles */
@@ -14,9 +15,10 @@ body {
 }
 
 .card {
+    /* max-height: 70vh;
+    overflow-y: scroll; */
     box-shadow: 0 0 4px black;
     border: none;
-    overflow: hidden;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -50,8 +52,9 @@ body {
     text-align: center;
 }
 
+
 /* Footer styles */
-footer {
+/* footer {
     background-color: #f8f9fa;
     padding: 10px 0;
     color: #6c757d;
@@ -59,7 +62,7 @@ footer {
     left: 0;
     bottom: 0;
     width: 100%;
-}
+} */
 
 /* Animation styles */
 @keyframes bg {

@@ -18,6 +18,9 @@ origins = [
     "https://localhost.organdonation.com",
     "http://localhost",
     "http://localhost:8000",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "*"
 ]
 
 app.add_middleware(
@@ -300,7 +303,7 @@ async def read(db: Session = Depends(get_db)):
         donor_data.append({
             "donation_id": donation_id,
             "organ_name": organ_name,
-            "donor_name": donor_name
+            "donor_name": donor_name,
         })
     return donor_data
 
