@@ -5,6 +5,11 @@ from database import engine, SessionLocal
 from sqlalchemy.orm import Session, aliased
 from random import randint
 from fastapi.middleware.cors import CORSMiddleware
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from PIL import Image, ImageDraw, ImageFont
 
 app = FastAPI()
 
@@ -13,8 +18,6 @@ origins = [
     "https://localhost.organdonation.com",
     "http://localhost",
     "http://localhost:8000",
-    "http://127.0.0.1:5500",
-    "null"
 ]
 
 app.add_middleware(
@@ -155,7 +158,22 @@ async def forgot_password(email: str, db: Session = Depends(get_db)):
     temporary_password = str(randint(100000, 999999))
     user.password = temporary_password
     db.commit()
-    return {"message": "Temporary password sent successfully", "temporaryPassword": temporary_password}
+    sender_email = 'saiyamkalra@gmail.com'
+    recipient_email = user.email
+    password = 'rlij yqlg yrio SECRET'
+    subject = 'OTP For Password Reset - Organ Donation'
+    body = f'Your OTP is {temporary_password}'
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'plain'))
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, password)
+    server.sendmail(sender_email, recipient_email, message.as_string())
+    server.quit()
+    return {"message": "Temporary password sent successfully"}
 
 @app.put("/changePassword")
 async def change_password(email: str, old_password:str, new_password:str, db: Session = Depends(get_db)):
@@ -263,7 +281,6 @@ async def read(user_id: int, organ_id: int, reason: str, db: Session = Depends(g
     donation_model.reason = reason
     db.add(donation_model)
     db.commit()
-    
     return {"message": "Request Placed successfully"}
 
 @app.get("/getAvailableOrgansForDonation")
@@ -283,8 +300,7 @@ async def read(db: Session = Depends(get_db)):
         donor_data.append({
             "donation_id": donation_id,
             "organ_name": organ_name,
-            "donor_name": donor_name,
-            "donor_id": donor.id
+            "donor_name": donor_name
         })
     return donor_data
 
@@ -340,6 +356,7 @@ async def read(db: Session = Depends(get_db)):
 async def read(donation_recipient_table_id: int, donation_donor_table_id: int, organ_id: int, db: Session = Depends(get_db)):
     donationR = db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).first()
     donationD = db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).first()
+    donor = db.query(models.Users).filter(models.Users.id == donationD.donor_id).first()
     donation_model = models.Donations()
     donation_model.donor_id = donationD.donor_id
     donation_model.recipient_id = donationR.recipient_id
@@ -349,6 +366,34 @@ async def read(donation_recipient_table_id: int, donation_donor_table_id: int, o
     db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).delete()
     db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).delete()
     db.commit()
+    im = Image.open("cert.jpg")
+    d = ImageDraw.Draw(im)
+    location = (1300, 1150)
+    text_color = (168, 131, 36)
+    font = ImageFont.truetype("arial.ttf", 150)
+    donorFullName = donor.first_name + " " + donor.last_name
+    d.text(location, donorFullName, fill=text_color, font=font)
+    cert_file_path = "certificate_" + donorFullName + ".pdf"
+    im.save(cert_file_path)
+    sender_email = 'saiyamkalra@gmail.com'
+    recipient_email = 'saiyamkalra@gmail.com'
+    password = 'rlij yqlg yrio SECRET'
+    subject = 'Certificate and Thanks for Your Donation'
+    body = f'Thanks for your donation! Please find the attached certificate.'
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = recipient_email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'plain'))
+    with open(cert_file_path, 'rb') as cert_file:
+        cert_attachment = MIMEApplication(cert_file.read(), _subtype="pdf")
+        cert_attachment.add_header('Content-Disposition', 'attachment', filename=f'certificate_{donorFullName}.pdf')
+        message.attach(cert_attachment)
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, password)
+    server.sendmail(sender_email, recipient_email, message.as_string())
+    server.quit()
     return {"message": "Approved"}
 
 @app.put("/rejectRequest/{donation_recipient_table_id}")
@@ -363,4 +408,3 @@ async def read(donation_recipient_table_id: int, db: Session = Depends(get_db)):
     db.add(donationR)
     db.commit()
     return {"message": "Request Rejected"}
- 
