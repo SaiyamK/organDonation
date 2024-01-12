@@ -3,3 +3,4 @@ Dependencies
 SQLAlchemy
 fastAPI
 uvicorn
+pytest
