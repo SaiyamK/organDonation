@@ -1,0 +1,75 @@
+body {
+    background: linear-gradient(to right, #86cbb4, #98c9d8, #c3e8ff);
+    background-size: 400%;
+    animation: bg 5s linear infinite alternate;
+
+}
+
+.container-navbar {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid grey;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.8px);
+    -webkit-backdrop-filter: blur(4.8px);
+}
+
+.card {
+    box-shadow: 0 0 4px black;
+    border: none;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.8px);
+    -webkit-backdrop-filter: blur(4.8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.card-header {
+    background-color: #41a3a3;
+    color: #fff;
+    text-align: center;
+}
+
+.navbar {
+    background-color: #f8f9fa;
+    color: white;
+}
+
+.nav-tabs .nav-link {
+    color: #41a3a3;
+}
+
+.nav-tabs .nav-link.active {
+
+    color: #fff;
+    background-color: #41a3a3;
+    border: none;
+}
+
+.table th,
+.table td {
+    text-align: center;
+}
+
+
+/* 
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: #6c757d;
+} */
+
+@keyframes bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}

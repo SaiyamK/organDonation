@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Twilyf</title>
+
+</head>
+
+<body>
+    <div class="container-navbar">
+        <nav class="navbar navbar-expand-lg bg-body-transparent">
+            <div class="container-fluid">
+                <h1 class="navbar-brand" id="logo-text" style="font-size: 2rem;">Twilyf</h1>
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Login User</h4>
+            </div>
+            <form>
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label for="Email">Email id</label>
+                        <input type="email" class="form-control" id="Email" placeholder="Enter your email id">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-group col-md-6  text-center">
+                        <button type="button" class="btn btn-primary btn-block" id="btn" onclick="validatePassword()">
+                            Login
+                            <div class="spinner-border spinner-border-sm d-none" role="status" id="spinner"></div>
+                        </button>
+                        <p id="errorMessage" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group col-md-6 d-flex flex-column">
+                        <a href="register.html" id="register-link">Register Here</a>
+                        <a href="../password-reset/request.html" id="forgot-pasword-link">Forgot Password</a>
+                    </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="mt-4 text-center">
+        <p>&copy; 2024 Twilyf - Saving lives one organ at a time.</p>
+    </footer>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="login.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</body>
+
+</html>

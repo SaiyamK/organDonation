@@ -1,0 +1,141 @@
+body {
+    background: linear-gradient(to right, #86cbb4, #98c9d8, #c3e8ff);
+    background-size: 400%;
+    animation: bg 5s linear infinite alternate;
+}
+
+.container-navbar {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid grey;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.8px);
+    -webkit-backdrop-filter: blur(4.8px);
+}
+
+.container {
+    max-width: 800px;
+    margin-top: 100px;
+}
+
+.form-row {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.card-header {
+    background-color: #41a3a3;
+    color: #fff;
+    text-align: center;
+}
+
+.quote {
+    font-style: italic;
+    color: #6c757d;
+}
+
+.form-group {
+    margin-top: 20px;
+    display: inline;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 15px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+}
+
+.form-group input:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 2px solid black;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: none;
+    border-bottom: 1px solid black;
+}
+
+#errorMessage {
+    color: red;
+    font-weight: bolder;
+}
+
+#btn {
+    width: 20%;
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+    background-color: #41a3a3;
+    padding: 0.5% 4%;
+}
+
+#btn:hover {
+    background-color: #328080;
+}
+
+#btn:active {
+    background-color: #414141;
+}
+
+a {
+    color: rgb(187, 187, 187);
+    text-decoration: none;
+}
+
+a:hover {
+    color: grey;
+}
+
+a:active {
+    color: rgb(82, 82, 82);
+}
+
+#text-secondary {
+    color: grey;
+}
+
+#text-secondary:hover {
+    color: rgb(82, 82, 82);
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    color: #6c757d;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+@keyframes bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
