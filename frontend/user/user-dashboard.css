@@ -1,0 +1,76 @@
+/* user-dashboard.css */
+
+/* Body styles */
+body {
+    background: linear-gradient(to right, #86cbb4, #98c9d8, #c3e8ff);
+    background-size: 400%;
+    animation: bg 5s linear infinite alternate;
+    height: 100%;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #f8f9fa;
+    color: white;
+}
+
+.card {
+    /* max-height: 70vh;
+    overflow-y: scroll; */
+    box-shadow: 0 0 4px black;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.8px);
+    -webkit-backdrop-filter: blur(4.8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* User Dashboard Card styles */
+.card-header {
+    background-color: #41a3a3;
+    color: #fff;
+    text-align: center;
+}
+
+/* Tab styles */
+.nav-tabs .nav-link {
+    color: #41a3a3;
+}
+
+.nav-tabs .nav-link.active {
+
+    color: #fff;
+    background-color: #41a3a3;
+    border: none;
+}
+
+/* Table styles */
+.table th,
+.table td {
+    text-align: center;
+}
+
+
+/* Footer styles */
+/* footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    color: #6c757d;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+} */
+
+/* Animation styles */
+@keyframes bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}

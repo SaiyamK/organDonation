@@ -1,0 +1,91 @@
+body {
+    /* background-color: #f8f9fa; */
+    background: linear-gradient(to right, #86cbb4, #98c9d8, #c3e8ff);
+    background-size: 400%;
+    animation: bg 5s linear infinite alternate;
+}
+
+#logo-text {
+    font-size: 2rem;
+}
+
+.container-navbar {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid grey;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.8px);
+    -webkit-backdrop-filter: blur(4.8px);
+}
+
+.container {
+    max-width: 400px;
+    margin-top: 100px;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #41a3a3;
+    color: #fff;
+    text-align: center;
+}
+
+.quote {
+    font-style: italic;
+    color: #6c757d;
+}
+
+#btn-otp {
+    background-color: #41a3a3;
+    border: none;
+}
+
+#btn-otp:hover {
+    background-color: #328080;
+    border: none;
+}
+
+#btn-otp:active {
+    background-color: #414141;
+    border: none;
+}
+
+#btn-change {
+    background-color: #41a3a3;
+    border: none;
+}
+
+#btn-change:hover {
+    background-color: #328080;
+    border: none;
+}
+
+#btn-change:active {
+    background-color: #414141;
+    border: none;
+}
+
+a {
+    color: grey;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    color: #6c757d;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+@keyframes bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}

@@ -10,7 +10,23 @@
 </head>
 
 <body>
+    <div class="container-navbar">
+        <nav class="navbar navbar-expand-lg bg-body-transparent">
+            <div class="container-fluid">
+                <h1 class="navbar-brand" id="logo-text">Twilyf</h1>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="text-secondary" aria-current="page"
+                            href="../user/login.html">Login</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="">Contact</a>
+                        </li> -->
 
+                </ul>
+            </div>
+        </nav>
+    </div>
     <div class="container">
         <div class="card">
             <div class="card-header">
@@ -30,19 +46,26 @@
                         <label for="password">New Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="btn-otp">Change Password</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="btn-change">
+                        Change Password
+                        <div class="spinner-border spinner-border-sm d-none" role="status" id="spinner"></div>
+                    </button>
                 </form>
                 <p class="quote mt-3">"Saving lives one organ at a time."</p>
             </div>
         </div>
     </div>
+    <footer class="mt-4 text-center">
+        <p>&copy; 2024 Twilyf - Saving lives one organ at a time.</p>
+    </footer>
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <script src="request.js">
+    <script src="reset.js">
     </script>
 
 </body>

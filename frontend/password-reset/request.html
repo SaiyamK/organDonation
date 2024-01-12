@@ -10,7 +10,23 @@
 </head>
 
 <body>
+    <div class="container-navbar">
+        <nav class="navbar navbar-expand-lg bg-body-transparent">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#" id="logo-text">Twilyf</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="text-secondary" aria-current="page"
+                            href="../user/login.html">Login</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="">Contact</a>
+                        </li> -->
 
+                </ul>
+            </div>
+        </nav>
+    </div>
     <div class="container">
         <div class="card">
             <div class="card-header">
@@ -22,12 +38,18 @@
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="btn-otp">Get OTP</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="btn-otp">
+                        Get OTP
+                        <div class="spinner-border spinner-border-sm d-none" role="status" id="spinner"></div>
+                    </button>
                 </form>
                 <p class="quote mt-3">"Saving lives one organ at a time."</p>
             </div>
         </div>
     </div>
+    <footer class="mt-4 text-center">
+        <p>&copy; 2024 Twilyf - Saving lives one organ at a time.</p>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>

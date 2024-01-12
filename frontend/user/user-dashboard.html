@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilyf - User Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="user-dashboard.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h1 class="navbar-brand" style="font-size: 2rem;">Twilyf</h1>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">User Dashboard</h4>
+            </div>
+            <div class="card-body">
+                <!-- Tabs for Profile, Contribute, and Request -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#profileTab">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contributeTab">Contribute</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#requestTab">Request</a>
+                    </li>
+                </ul>
+
+                <!-- Profile Tab Content -->
+                <div id="profileTab" class="tab-content mt-3">
+                    <h5>Profile</h5>
+                    <div class="profile-section" id="profile-section">
+                        <p><strong>First Name:</strong> John</p>
+                        <p><strong>Last Name:</strong> Doe</p>
+                        <p><strong>Email:</strong> john.doe@example.com</p>
+                        <p><strong>Mobile:</strong> +1 123-456-7890</p>
+                        <p><strong>Address:</strong> 123 Main Street, Cityville</p>
+                        <p><strong>Blood Group:</strong> O+</p>
+                        <p><strong>Hospital ID:</strong> 987654</p>
+                        <p><strong>Status:</strong> Alive</p>
+                    </div>
+                </div>
+
+                <!-- Contribute Tab Content -->
+                <div id="contributeTab" class="tab-content mt-3 d-none">
+                    <h5>Contribute</h5>
+
+                    <!-- Previous Contributions Section -->
+                    <div class="previous-contributions-section">
+                        <h6>Previous Contributions</h6>
+                        <!-- Table for Previous Contributions -->
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Organ Name</th>
+                                    <th>Recipient</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contrib-table" style="height: 5%;">
+                                <!-- Dummy Data for Previous Contributions (Replace with dynamic data) -->
+
+
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Volunteer for Donation Form -->
+                    <div class="volunteer-form-section">
+                        <h6>Volunteer for Donation</h6>
+                        <form>
+                            <div class="form-group">
+                                <label for="organSelect">Select Organ:</label>
+                                <select class="form-control" id="organSelect">
+                                    <option value="1">Kidney</option>
+                                    <option value="2">Liver</option>
+                                    <option value="3">Eye</option>
+                                    <option value="4">Heart</option>
+                                    <option value="5">Lungs</option>
+                                    <option value="6">Pancreas</option>
+                                    <option value="7">Intestines</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="consentCheckbox">
+                                <label class="form-check-label" for="consentCheckbox">I consent to donate my
+                                    organ.</label>
+                            </div>
+                            <button class="btn btn-primary" id="btn-contrib">
+                                Submit Request
+                                <div class="spinner-border spinner-border-sm d-none" role="status" id="contrib-spinner">
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Request Tab Content -->
+                <div id="requestTab" class="tab-content mt-3 d-none">
+                    <h5>Request</h5>
+
+                    <!-- My Requests Section -->
+                    <div class="my-requests-section">
+                        <h6>My Requests</h6>
+                        <!-- Table for My Requests -->
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Organ Name</th>
+                                    <th>Donor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-req">
+                                <!-- Dummy Data for My Requests (Replace with dynamic data) -->
+                                <!-- <tr>
+                                    <td>Heart</td>
+                                    <td>User 3</td>
+                                    <td>Pending Approval</td>
+                                </tr>
+                                <tr>
+                                    <td>Kidney</td>
+                                    <td>NA</td>
+                                    <td>Approved</td>
+                                </tr> -->
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Apply for Organ Form -->
+                    <div class="apply-form-section">
+                        <h6>Apply for Organ</h6>
+                        <form>
+                            <div class="form-group">
+                                <label for="organRequestSelect">Select Organ:</label>
+                                <select class="form-control" id="organRequestSelect">
+                                    <option value="1">Kidney</option>
+                                    <option value="2">Liver</option>
+                                    <option value="3">Eye</option>
+                                    <option value="4">Heart</option>
+                                    <option value="5">Lungs</option>
+                                    <option value="6">Pancreas</option>
+                                    <option value="7">Intestines</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="reasonTextarea">Reason for Request:</label>
+                                <textarea class="form-control" id="reasonTextarea" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btn-req">
+                                Submit Request
+                                <div class="spinner-border spinner-border-sm d-none" role="status" id="req-spinner">
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-4 text-center">
+            <p>&copy; 2024 Twilyf - Saving lives one organ at a time.</p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS and any additional scripts -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add any additional scripts here -->
+
+    <script src="user-dashboard.js">
+        // Add your JavaScript code for tab selection (highlighting) and other interactions.
+    </script>
+
+</body>
+
+</html>
