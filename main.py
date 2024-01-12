@@ -303,7 +303,7 @@ async def read(db: Session = Depends(get_db)):
         donor_data.append({
             "donation_id": donation_id,
             "organ_name": organ_name,
-            "donor_name": donor_name,
+            "donor_name": donor_name
         })
     return donor_data
 
@@ -379,11 +379,7 @@ async def read(donation_recipient_table_id: int, donation_donor_table_id: int, o
     cert_file_path = "certificate_" + donorFullName + ".pdf"
     im.save(cert_file_path)
     sender_email = 'saiyamkalra@gmail.com'
-<<<<<<< HEAD
     recipient_email = donor.email
-=======
-    recipient_email = 'saiyamkalra@gmail.com'
->>>>>>> coldcoffeee-master
     password = 'rlij yqlg yrio SECRET'
     subject = 'Certificate and Thanks for Your Donation'
     body = f'Thanks for your donation! Please find the attached certificate.'
