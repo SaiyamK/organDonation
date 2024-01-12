@@ -13,6 +13,8 @@ origins = [
     "https://localhost.organdonation.com",
     "http://localhost",
     "http://localhost:8000",
+    "http://127.0.0.1:5500",
+    "null"
 ]
 
 app.add_middleware(
@@ -43,8 +45,6 @@ class Users(BaseModel):
     bloodGroup: str = Field(min_length=1, max_length=3)
     hospital_id: int = Field()
     isAlive: bool = Field(default=False)
-    isDonor: bool = Field(default=False)
-    isRecipient: bool = Field(default=False)
 
 class Organs(BaseModel):
     organ_name: str = Field(min_length=1, max_length=100)
@@ -238,7 +238,7 @@ async def read(user_id: int, db: Session = Depends(get_db)):
         donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
         donor_data.append({
             "organ_name": organ_name,
-            "recipient_name": donor_name,
+            "donor_name": donor_name,
             "donation_status": donation_status
         })
     return donor_data
@@ -266,7 +266,7 @@ async def read(user_id: int, organ_id: int, reason: str, db: Session = Depends(g
     return {"message": "Request Placed successfully"}
 
 @app.get("/getAvailableOrgansForDonation")
-async def read(db:Session = Depends(get_db)):
+async def read(db: Session = Depends(get_db)):
     query = (
     db.query(models.Users, models.Donations, models.Organs)
     .join(models.Donations, models.Donations.donor_id == models.Users.id, isouter=False)
@@ -278,12 +278,12 @@ async def read(db:Session = Depends(get_db)):
     for donor, donations, organ in query:
         donation_id = donations.id
         organ_name = organ.organ_name
-        #donor_name = f"{donor.first_name} {donor.last_name}" if donor else None
         donor_name = donor.first_name +" " + donor.last_name
         donor_data.append({
             "donation_id": donation_id,
             "organ_name": organ_name,
-            "donor_name": donor_name
+            "donor_name": donor_name,
+            "donor_id": donor.id
         })
     return donor_data
 
@@ -299,90 +299,67 @@ async def delete(donation_id: int, db:Session = Depends(get_db)):
     db.commit()
     return {"message": "Deleted"}
 
-# @app.post("/donateOrgan")
-# async def create(donation: Donations,user_id: int,db:Session = Depends(get_db)):
-#     user = db.query(models.Users).filter(models.Users.id == user_id).first()
-#     if user.isDonor:
-#         donor_model = models.Donations()
-#         donor_model.donor_id = donation.donor_id
-#         donor_model.recipient_id = donation.recipient_id
-#         donor_model.organ_id = donation.organ_id
-#         donor_model.status = donation.status
-#         db.add(donor_model)
-#         db.commit()
-#         return donation
-    
-# @app.post("/receiveOrgan")
-# async def create(receive: Donations,user_id: int,db:Session = Depends(get_db)):
-#     user = db.query(models.Users).filter(models.Users.id == user_id).first()
-#     if user.isRecipient:
-#         receipent_model = models.Donations()
-#         receipent_model.donor_id = receive.donor_id
-#         receipent_model.recipient_id = receive.recipient_id
-#         receipent_model.organ_id = receive.organ_id
-#         receipent_model.status = receive.status
-#         db.add(receipent_model)
-#         db.commit()
-#         return receive
+@app.get("/getRequests")
+async def read(db: Session = Depends(get_db)):
+    userR = aliased(models.Users)
+    donationR = aliased(models.Donations)
+    userD = aliased(models.Users)
+    donationD = aliased(models.Donations)
+    query = (
+    db.query(userR, userD, donationR, donationD, models.Organs)
+    .join(userR, userR.id == donationR.recipient_id, isouter=False)
+    .join(userD, userD.id == donationD.donor_id, isouter=False)
+    .join(donationD, donationR.organ_id == donationD.organ_id, isouter=False)
+    .join(models.Organs, donationR.organ_id == models.Organs.id, isouter=False)
+    .filter(donationD.recipient_id.is_(None))
+    .filter(donationR.donor_id.is_(None))
+    .filter(donationR.status == 'pending')
+    .filter(donationD.status == 'pending')
+    .all()
+    )
+    data = []
+    for userR, userD, donationR, donationD, organ in query:
+        donor_name = userD.first_name + " " + userD.last_name
+        recipient_name = userR.first_name + " " + userR.last_name
+        organ_name = organ.organ_name
+        donation_recipient_table_id = donationR.id
+        donation_donor_table_id = donationD.id
+        organ_id = organ.id
+        data.append({
+            "donation_recipient_table_id": donation_recipient_table_id,
+            "donation_donor_table_id": donation_donor_table_id,
+            "donor_name": donor_name,
+            "recipient_name": recipient_name,
+            "organ_name": organ_name,
+            "organ_id": organ_id
+        })
+    return data
 
-# @app.get("/getDonor")
-# async def read(db:Session = Depends(get_db)):
-#     query = (
-#         db.query(models.Users, models.Organs, models.Hospitals)
-#         .join(models.Organs, models.Users.organ_id == models.Organs.id, isouter=True)
-#         .join(models.Hospitals, models.Users.hospital_id == models.Hospitals.id, isouter=True)
-#         .filter(models.Users.isDonor == True)
-#         .all()
-#     )
-#     donor_data = []
-#     for user, organ, hospital in query:
-#         donor_data.append({
-#             "user_id": user.id,
-#             "first_name": user.first_name,
-#             "last_name": user.last_name,
-#             "email": user.email,
-#             "mobile": user.mobile,
-#             "address": user.address,
-#             "bloodGroup": user.bloodGroup,
-#             "organ_name": organ.organ_name if organ else None,
-#             "hospital_name": hospital.hospital_name if hospital else None,
-#             "isAlive": user.isAlive,
-#             "isDonor": user.isDonor,
-#             "isRecipient": user.isRecipient,
-#         })
-#     return donor_data
+@app.put("/approveRequest/{donation_recipient_table_id}/{donation_donor_table_id}/{organ_id}")
+async def read(donation_recipient_table_id: int, donation_donor_table_id: int, organ_id: int, db: Session = Depends(get_db)):
+    donationR = db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).first()
+    donationD = db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).first()
+    donation_model = models.Donations()
+    donation_model.donor_id = donationD.donor_id
+    donation_model.recipient_id = donationR.recipient_id
+    donation_model.organ_id = organ_id
+    donation_model.status = 'approved'
+    db.add(donation_model)
+    db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).delete()
+    db.query(models.Donations).filter(models.Donations.id == donation_donor_table_id).delete()
+    db.commit()
+    return {"message": "Approved"}
 
-# @app.get("/getRecipient")
-# async def read(db:Session = Depends(get_db)):
-#     recepient = db.query(models.Users).filter(models.Users.isRecipient == True).all()
-#     return recepient
-
-# @app.put("/registerDR/{user_id}")
-# async def create(user_id:int, user: Users, db:Session = Depends(get_db)):
-#     user_model = db.query(models.Users).filter(models.Users.id == user_id).first()
-#     if user_model is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"ID {user_id} : Does Not Exists"
-#         )
-#     user_model.address = user.address
-#     user_model.bloodGroup = user.bloodGroup
-#     user_model.organ_id = user.organ_id
-#     user_model.hospital_id = user.hospital_id
-#     user_model.isAlive = user.isAlive
-#     user_model.isDonor = user.isDonor
-#     user_model.isRecipient = user.isRecipient
-#     db.add(user_model)
-#     db.commit()
-#     return user
-
-# @app.put("/delete/{book_id}")
-# async def delete(book_id: int, db:Session = Depends(get_db)):
-#     book_model = db.query(models.Books).filter(models.Books.id == book_id).first()
-#     if book_model is None:
-#         raise HTTPException(
-#             status_code=404,
-#             detail=f"ID {book_id} : Does Not Exists"
-#         )
-#     db.query(models.Books).filter(models.Books.id == book_id).delete()
-#     db.commit()
+@app.put("/rejectRequest/{donation_recipient_table_id}")
+async def read(donation_recipient_table_id: int, db: Session = Depends(get_db)):
+    donationR = db.query(models.Donations).filter(models.Donations.id == donation_recipient_table_id).first()
+    if donationR is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Donation ID {donation_recipient_table_id} : Does Not Exists"
+        )
+    donationR.status = 'rejected'
+    db.add(donationR)
+    db.commit()
+    return {"message": "Request Rejected"}
+ 

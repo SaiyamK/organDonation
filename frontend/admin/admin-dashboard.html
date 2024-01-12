@@ -46,14 +46,16 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>User</th>
+                                <th>Donor - ID</th>
+                                <th>Organ</th>
+                                <th>Recipient - ID</th>
                                 <th>Organ</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="requests-table">
                             <!-- Dummy Data (Replace with dynamic data) -->
-                            <tr>
+                            <!-- <tr>
                                 <td>1</td>
                                 <td>User 1</td>
                                 <td>Kidney</td>
@@ -70,7 +72,7 @@
                                     <button class="btn btn-success">Approve</button>
                                     <button class="btn btn-danger">Reject</button>
                                 </td>
-                            </tr>
+                            </tr> -->
                             <!-- Add more rows as needed -->
                         </tbody>
                     </table>
@@ -84,29 +86,29 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Organ Name</th>
-                                <th>Quantity</th>
+                                <th>Organ</th>
+                                <th>Donor - ID</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="organs-table">
                             <!-- Dummy Data (Replace with dynamic data) -->
-                            <tr>
+                            <!-- <tr>
                                 <td>1</td>
                                 <td>Kidney</td>
                                 <td>10</td>
                                 <td>
                                     <button class="btn btn-danger">Remove</button>
                                 </td>
-                            </tr>
-                            <tr>
+                            </tr> -->
+                            <!-- <tr>
                                 <td>2</td>
                                 <td>Heart</td>
                                 <td>5</td>
                                 <td>
                                     <button class="btn btn-danger">Remove</button>
                                 </td>
-                            </tr>
+                            </tr> -->
                             <!-- Add more rows as needed -->
                         </tbody>
                     </table>
@@ -121,6 +123,7 @@
     </div>
 
     <!-- Bootstrap JS and any additional scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
