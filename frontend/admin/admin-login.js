@@ -1,17 +1,18 @@
-const validateEntries = async (username, password) => new Promise((res, rej) => {
-    setTimeout(() => {
-        if (username === 'admin' && password === '123') res({
-            message: "Logged in successfully!",
-            status: 200,
-            next: 'admin-dashboard.html'
-        })
-        else rej({
-            message: "Incorrect username or password!",
-            status: 401,
-            next: null
-        })
-    }, 2000);
-});
+const validateEntries = async (username, password) => {
+    try {
+        const res = await axios.post(`http://localhost:8000/authenticateUser?email=${username}&password=${password}`);
+        console.log(res);
+    } catch (err) {
+        if (err.response.status === 404) {
+            await swal("Unauthorized", "Invalid credentials", "error", {
+                button: "Close",
+            });
+        }
+        throw err;
+    }
+};
+
+
 
 document.getElementById('btn-login').addEventListener("click", async (e) => {
     e.preventDefault();
@@ -20,9 +21,11 @@ document.getElementById('btn-login').addEventListener("click", async (e) => {
     const spinner = document.getElementById("spinner");
     spinner.classList.toggle("d-none");
     try {
-        const res = await validateEntries(username, password);
-        window.alert(res.message);
-        window.location = res.next;
+        await validateEntries(username, password);
+        await swal("Welcome", "Admin verified!", "success", {
+            button: "Dashboard",
+        });
+        window.location = "admin-dashboard.html";
     } catch (err) {
         console.log(err.message);
     } finally {
