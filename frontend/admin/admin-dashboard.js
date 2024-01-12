@@ -52,10 +52,9 @@ const fetchPendingRequests = async () => {
             requestsTable.innerHTML += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${req.recipient_name} - ${req.donation_recipient_table_id}</td>
-                <td>${req.organ_name}</td>
                 <td>${req.donor_name} - ${req.donation_donor_table_id}</td>
-                <td>Kidney</td>
+                <td>${req.organ_name}</td>
+                <td>${req.recipient_name} - ${req.donation_recipient_table_id}</td>
                 <td>
                     <button class="btn btn-success" onclick="approveDonation(${req.donation_donor_table_id}, ${req.donation_recipient_table_id}, ${req.organ_id}, ${i})">Approve</button>
                     <button class="btn btn-danger" onclick="rejectDonation(${req.donation_donor_table_id}, ${i})">Reject</button>

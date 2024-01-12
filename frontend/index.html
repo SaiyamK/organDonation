@@ -1,58 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organ Donation System</title>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organ Donation System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="container-navbar">
-        <nav class="navbar navbar-expand-lg bg-body-transparent">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#" id="logo-text">Twilyf</a>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="userLogin.html">Donate</a>
-                    </li>
-                    <!-- <li class="nav-item">
+  <div class="container-navbar">
+    <nav class="navbar navbar-expand-lg bg-body-transparent">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#" id="logo-text">Twilyf</a>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="user/register.html">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="admin/admin-login.html">Admin Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="user/login.html">User Login</a>
+          </li>
+          <!-- <li class="nav-item">
                       <a class="nav-link active" aria-current="page" href="">Contact</a>
                     </li> -->
-                    
-                </ul>
-              </div>
-            </div>
-          </nav>   
-    </div>
-    <div class="container2">
-    <div class="container-body">
-    <div class="container-body-text">
-        <h3 id="image-body-text-main">Organ Donation<br>
-            <span id="text-span">A Life-Change</span></h3>
-            <br><h4 id="image-body-text"> Gifting lives, one organ at a time</h4>
-            <button type="button" class="btn btn-light btn-lg" id="btn-body" onclick="redirect()">Lend a Hand</button>
 
-    </div>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="container2">
+    <div class="container-body">
+      <div class="container-body-text">
+        <h3 id="image-body-text-main">Organ Donation<br>
+          <span id="text-span">A Life-Change</span>
+        </h3>
+        <br>
+        <h4 id="image-body-text"> Gifting lives, one organ at a time</h4>
+        <a type="button" class="btn btn-light btn-lg" id="btn-body" onclick="redirect()">Lend a Hand</a>
+
+      </div>
     </div>
   </div>
   <footer>
     <div class="container">
-        <div class="footer-content">
-            <p>&copy; 2024 Twilyf - </p>
-            <p><i>"Saving lives one organ at a time"</i> </p>
-        </div>
+      <div class="footer-content">
+        <p>&copy; 2024 Twilyf - </p>
+        <p><i>"Saving lives one organ at a time"</i> </p>
+      </div>
     </div>
-</footer>
-<script>
-  function redirect(){
-    window.location="userLogin.html";
-  }
-</script>
+  </footer>
+  <script>
+    function redirect() {
+      window.location = "user/register.html";
+    }
+  </script>
 </body>
+
 </html>

@@ -3,63 +3,70 @@
     margin-right: 8px;
 } */
 
-.container-navbar{
-        padding: 15px 10px;
-        font-weight: 10px;
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-#logo-text{
-        font-size: 30px;
+.container-navbar {
+    padding: 15px 10px;
+    font-weight: 10px;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
-.container-body{
-        padding: 15px 10px;
-        background-image: url('assets/body-image.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 80vh; 
-       
-}
-@media  screen and (max-width: 480px) {
-    .container-body {
-      width: 100%;
-    }
-  }
 
-#image-body-text-main{
+#logo-text {
+    font-size: 30px;
+}
+
+.container-body {
+    padding: 15px 10px;
+    background-image: url('assets/body-image.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+
+}
+
+@media screen and (max-width: 480px) {
+    .container-body {
+        width: 100%;
+    }
+}
+
+#image-body-text-main {
     text-transform: uppercase;
     font-size: 55px;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: bolder;
     margin-top: 10%;
-    
+
 }
-#text-span{
+
+#text-span {
     font-size: 30px;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
-#image-body-text{
+
+#image-body-text {
     padding-left: 10px;
-    font-family: Georgia, 'Times New Roman', Times, serif;  
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-#btn-body{
+#btn-body {
     margin-left: 10px;
     padding-left: 40px;
     padding-right: 40px;
     border-radius: 16px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: orange;
-    border:none
+    border: none
 }
-#btn-body:hover{
+
+#btn-body:hover {
     background-color: white;
 }
 
-.container-testominals{
+.container-testominals {
     display: inline;
 }
-.card{
+
+.card {
     display: inline-block;
 }
 
@@ -96,11 +103,11 @@ ul li {
     color: #fff;
 }
 
-@media  screen and (max-width: 600px) {
+@media screen and (max-width: 600px) {
     .footer-content {
         flex-direction: column;
         align-items: flex-start;
-    
+
     }
 
     ul {

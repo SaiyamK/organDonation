@@ -3,7 +3,7 @@ const validateEntries = async (username, password) => new Promise((res, rej) => 
         if (username === 'admin' && password === '123') res({
             message: "Logged in successfully!",
             status: 200,
-            next: '/modules/admin/admin-dashboard.html'
+            next: 'admin-dashboard.html'
         })
         else rej({
             message: "Incorrect username or password!",

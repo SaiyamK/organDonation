@@ -1,4 +1,3 @@
-<!-- admin-dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,12 +11,12 @@
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Twilyf</a>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light container-navbar">
+        <h1 class="navbar-brand" style="font-size: 2rem;">Twilyf</h1>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="../index.html">Logout</a>
             </li>
         </ul>
     </nav>
@@ -28,7 +27,7 @@
                 <h4 class="mb-0">Admin Dashboard</h4>
             </div>
             <div class="card-body">
-                <!-- Tabs for Organ Requests and Manage Organs -->
+
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                         <a class="nav-link active" href="#organ-requests">Organ Requests</a>
@@ -38,10 +37,10 @@
                     </li>
                 </ul>
 
-                <!-- Organ Requests Tab Content -->
+
                 <div id="organ-requests" class="tab-content mt-3">
                     <h5>Organ Requests</h5>
-                    <!-- Table for Organ Requests -->
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -49,39 +48,18 @@
                                 <th>Donor - ID</th>
                                 <th>Organ</th>
                                 <th>Recipient - ID</th>
-                                <th>Organ</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="requests-table">
-                            <!-- Dummy Data (Replace with dynamic data) -->
-                            <!-- <tr>
-                                <td>1</td>
-                                <td>User 1</td>
-                                <td>Kidney</td>
-                                <td>
-                                    <button class="btn btn-success">Approve</button>
-                                    <button class="btn btn-danger">Reject</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>User 2</td>
-                                <td>Heart</td>
-                                <td>
-                                    <button class="btn btn-success">Approve</button>
-                                    <button class="btn btn-danger">Reject</button>
-                                </td>
-                            </tr> -->
-                            <!-- Add more rows as needed -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Manage Organs Tab Content -->
+
                 <div id="manage-organs" class="tab-content mt-3" style="display: none;">
                     <h5>Manage Organs</h5>
-                    <!-- Table for Manage Organs -->
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -92,45 +70,25 @@
                             </tr>
                         </thead>
                         <tbody id="organs-table">
-                            <!-- Dummy Data (Replace with dynamic data) -->
-                            <!-- <tr>
-                                <td>1</td>
-                                <td>Kidney</td>
-                                <td>10</td>
-                                <td>
-                                    <button class="btn btn-danger">Remove</button>
-                                </td>
-                            </tr> -->
-                            <!-- <tr>
-                                <td>2</td>
-                                <td>Heart</td>
-                                <td>5</td>
-                                <td>
-                                    <button class="btn btn-danger">Remove</button>
-                                </td>
-                            </tr> -->
-                            <!-- Add more rows as needed -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
+
         <footer class="mt-4 text-center">
             <p>&copy; 2024 Twilyf - Saving lives one organ at a time.</p>
         </footer>
     </div>
 
-    <!-- Bootstrap JS and any additional scripts -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Add any additional scripts here -->
 
     <script src="admin-dashboard.js">
-        // Add your JavaScript code for tab selection (highlighting) and other interactions.
     </script>
 
 </body>
