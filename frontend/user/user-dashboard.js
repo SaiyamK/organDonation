@@ -189,5 +189,5 @@ document.getElementById("btn-req").addEventListener("click", async (e) => {
 document.getElementById("logout").addEventListener("click", (e) => {
     e.preventDefault();
     sessionStorage.removeItem(authToken);
-    window.location = "login.html";
+    window.location = "../index.html";
 });

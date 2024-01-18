@@ -380,7 +380,7 @@ async def read(donation_recipient_table_id: int, donation_donor_table_id: int, o
     im.save(cert_file_path)
     sender_email = 'saiyamkalra@gmail.com'
     recipient_email = donor.email
-    password = 'rlij yqlg yrio SECRET'
+    password = 'rlij yqlg yrio ffdd'
     subject = 'Certificate and Thanks for Your Donation'
     body = f'Thanks for your donation! Please find the attached certificate.'
     message = MIMEMultipart()
